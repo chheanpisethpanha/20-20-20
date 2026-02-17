@@ -5,17 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>20/20/20 Timer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'off-black': '#0f0f0f',
+                        'off-black-light': '#1a1a1a',
+                        'off-black-lighter': '#252525',
+                        'accent': '#fc4903',
+                        'accent-hover': '#e03d00',
+                        'accent-light': '#ff6b2b',
+                    }
+                }
+            }
+        }
+    </script>
     <script src="script.js" defer></script>
+    <style>
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(252, 73, 3, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(252, 73, 3, 0.5); }
+        }
+        .timer-active {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex flex-col items-center justify-center transition-colors">
-    <div class="p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg text-center max-w-sm w-full">
-        <h1 class="text-2xl font-bold mb-4">20/20/20 Rule Timer</h1>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">Stay productive and keep your eyes healthy!</p>
-        <div id="timer" class="text-4xl font-mono text-blue-600 dark:text-blue-400 mb-6">20:00</div>
-        <button id="startButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4">Start Timer</button>
+<body class="bg-off-black text-gray-100 min-h-screen flex flex-col items-center justify-center transition-all duration-500 font-sans antialiased">
+
+    <button id="toggleDarkMode" class="fixed top-6 right-6 p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
+        <svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+    </button>
+
+    <div class="relative p-8 md:p-12 bg-off-black-light border border-off-black-lighter rounded-3xl text-center max-w-md w-full mx-4 backdrop-blur-sm">
+        <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent-light/5 rounded-3xl"></div>
+
+        <div class="relative z-10">
+            <div class="mb-3 inline-block">
+                <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent-light shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">20/20/20 Rule Timer</h1>
+            <p class="text-gray-400 mb-2 text-sm md:text-base">Stay productive and keep your eyes healthy</p>
+
+            <div id="notificationStatus" class="mb-6 text-xs text-gray-500 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span id="notificationText">Notifications: Loading...</span>
+            </div>
+
+            <div class="mb-8 p-8 bg-off-black-lighter rounded-2xl border border-off-black-lighter">
+                <div id="timer" class="text-6xl md:text-7xl font-bold font-mono text-transparent bg-gradient-to-r from-accent via-accent-light to-accent bg-clip-text transition-all duration-300">20:00</div>
+                <p class="text-gray-500 text-xs mt-3 uppercase tracking-wider">Minutes Remaining</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="startButton" class="flex-1 bg-gradient-to-r from-accent to-accent-light hover:from-accent-hover hover:to-accent text-white font-semibold px-6 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg">
+                    Start Timer
+                </button>
+                <button id="resetButton" class="px-6 py-4 bg-off-black-lighter border border-off-black-lighter hover:border-accent text-gray-400 hover:text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105">
+                    Reset
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="mt-6 text-center">
-        <p class="text-gray-600 dark:text-gray-400">The 20/20/20 rule suggests taking a 20-second break to look at something 20 feet away (6 meters) every 20 minutes of screen time to reduce eye strain.</p>
+
+    <div class="mt-8 text-center max-w-lg mx-4">
+        <div class="p-6 bg-off-black-light/50 border border-off-black-lighter rounded-2xl backdrop-blur-sm">
+            <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 mt-1">
+                    <div class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm text-left leading-relaxed">The 20/20/20 rule suggests taking a 20-second break to look at something 20 feet away (6 meters) every 20 minutes of screen time to reduce eye strain.</p>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>
