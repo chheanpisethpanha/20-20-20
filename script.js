@@ -12,6 +12,7 @@ let isRestPeriod = false; // Track if we're in rest period
 const defaultDuration = 1200; // Default timer duration in seconds (20 minutes)
 const restDuration = 20; // Rest timer duration in seconds (20 seconds)
 const alarmSound = new Audio('i-have-eyes.mp3'); // Alarm sound
+alarmSound.volume = 0.7; // 30% volume reduction
 
 // Update notification status display
 function updateNotificationStatus() {
