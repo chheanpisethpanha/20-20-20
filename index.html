@@ -30,17 +30,43 @@
         .timer-active {
             animation: pulse-glow 2s ease-in-out infinite;
         }
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        #dot-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.13) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
     </style>
 </head>
 <body class="bg-off-black text-gray-100 min-h-screen flex flex-col items-center justify-center transition-all duration-500 font-sans antialiased">
 
-    <button id="toggleDarkMode" class="fixed top-6 right-6 p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
+    <canvas id="starfield"></canvas>
+    <div id="dot-grid"></div>
+
+    <button id="toggleDarkMode" class="fixed top-6 right-6 z-10 p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
         <svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
         </svg>
     </button>
 
-    <div class="relative p-8 md:p-12 bg-off-black-light border border-off-black-lighter rounded-3xl text-center max-w-md w-full mx-4 backdrop-blur-sm">
+    <div class="relative z-10 p-8 md:p-12 bg-off-black-light border border-off-black-lighter rounded-3xl text-center max-w-md w-full mx-4 backdrop-blur-sm">
         <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent-light/5 rounded-3xl"></div>
 
         <div class="relative z-10">
@@ -79,7 +105,7 @@
         </div>
     </div>
 
-    <div class="mt-8 text-center max-w-lg mx-4">
+    <div class="relative z-10 mt-8 text-center max-w-lg mx-4">
         <div class="p-6 bg-off-black-light/50 border border-off-black-lighter rounded-2xl backdrop-blur-sm">
             <div class="flex items-start gap-3">
                 <div class="flex-shrink-0 mt-1">

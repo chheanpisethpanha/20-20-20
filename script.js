@@ -145,14 +145,65 @@ resetButton.addEventListener('click', () => {
 toggleDarkMode.addEventListener('click', () => {
     const body = document.body;
     const isDark = body.classList.contains('bg-off-black');
+    const starfield = document.getElementById('starfield');
+    const dotGrid = document.getElementById('dot-grid');
 
     if (isDark) {
         body.classList.remove('bg-off-black', 'text-gray-100');
         body.classList.add('bg-gray-50', 'text-gray-900');
+        starfield.style.opacity = '0';
+        dotGrid.style.opacity = '1';
         toggleDarkMode.innerHTML = `<svg class="w-6 h-6 text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
     } else {
         body.classList.remove('bg-gray-50', 'text-gray-900');
         body.classList.add('bg-off-black', 'text-gray-100');
+        starfield.style.opacity = '1';
+        dotGrid.style.opacity = '0';
         toggleDarkMode.innerHTML = `<svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
     }
 });
+
+// Starfield background animation
+(function initStarfield() {
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function createStars() {
+        stars = [];
+        const count = Math.max(80, Math.floor((canvas.width * canvas.height) / 5000));
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.4 + 0.2,
+                alpha: Math.random(),
+                speed: (Math.random() * 0.004 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+            });
+        }
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const s of stars) {
+            s.alpha += s.speed;
+            if (s.alpha >= 1)    { s.alpha = 1;    s.speed = -Math.abs(s.speed); }
+            if (s.alpha <= 0.08) { s.alpha = 0.08; s.speed =  Math.abs(s.speed); }
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+            ctx.fill();
+        }
+        requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    draw();
+}());
