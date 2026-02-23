@@ -55,7 +55,7 @@ function sendNotification(title, body) {
 
 // Start Timer Function
 function startTimer(duration, isRest = false) {
-    let time = duration;
+    const endTime = Date.now() + duration * 1000;
     isRunning = true;
     isRestPeriod = isRest;
     startButton.textContent = 'Pause Timer';
@@ -64,14 +64,15 @@ function startTimer(duration, isRest = false) {
     clearInterval(interval);
 
     // Update the timer immediately
-    updateTimerDisplay(time);
+    updateTimerDisplay(duration);
 
-    // Start the interval
+    // Start the interval — remaining time is always derived from wall clock,
+    // so background tab throttling won't cause drift or missed alarms.
     interval = setInterval(() => {
-        time--;
-        updateTimerDisplay(time);
+        const remaining = Math.round((endTime - Date.now()) / 1000);
+        updateTimerDisplay(Math.max(0, remaining));
 
-        if (time < 0) {
+        if (remaining <= 0) {
             clearInterval(interval);
             alarmSound.play(); // Play alarm sound
 
