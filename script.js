@@ -114,6 +114,7 @@ function startTimer(duration, isRest = false) {
             if (isRestPeriod) {
                 // Rest period ended — play end sound, go back to work
                 endSound.play();
+                if (flashbangMode) setLightMode(false);
                 sendNotification(
                     '✅ Rest Complete!',
                     'Time to get back to work! Starting 20-minute work timer.'
@@ -122,6 +123,7 @@ function startTimer(duration, isRest = false) {
             } else {
                 // Work period ended — play start sound, begin rest
                 startSound.play();
+                if (flashbangMode) setLightMode(true);
                 sendNotification(
                     '👀 Time for a break!',
                     'Look at something 20 feet away for 20 seconds to rest your eyes.'
@@ -180,13 +182,11 @@ resetButton.addEventListener('click', () => {
     resetTimer();
 });
 
-toggleDarkMode.addEventListener('click', () => {
+function setLightMode(light) {
     const body = document.body;
-    const isDark = body.classList.contains('bg-off-black');
     const starfield = document.getElementById('starfield');
     const dotGrid = document.getElementById('dot-grid');
-
-    if (isDark) {
+    if (light) {
         body.classList.remove('bg-off-black', 'text-gray-100');
         body.classList.add('bg-gray-50', 'text-gray-900');
         starfield.style.opacity = '0';
@@ -198,6 +198,33 @@ toggleDarkMode.addEventListener('click', () => {
         starfield.style.opacity = '1';
         dotGrid.style.opacity = '0';
         toggleDarkMode.innerHTML = `<svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
+    }
+}
+
+toggleDarkMode.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('bg-off-black');
+    setLightMode(isDark);
+});
+
+// Flashbang mode
+let flashbangMode = false;
+const flashbangToggle = document.getElementById('flashbangToggle');
+
+flashbangToggle.addEventListener('click', () => {
+    if (!flashbangMode) {
+        const ok = confirm('⚡ Flashbang mode: light mode will auto-enable when your break starts.\n\nYour eyes will be punished. Enable?');
+        if (!ok) return;
+        flashbangMode = true;
+        flashbangToggle.classList.remove('border-off-black-lighter', 'hover:border-yellow-500');
+        flashbangToggle.classList.add('border-yellow-500');
+        flashbangToggle.querySelector('svg').classList.remove('text-gray-600', 'group-hover:text-yellow-400');
+        flashbangToggle.querySelector('svg').classList.add('text-yellow-400');
+    } else {
+        flashbangMode = false;
+        flashbangToggle.classList.add('border-off-black-lighter', 'hover:border-yellow-500');
+        flashbangToggle.classList.remove('border-yellow-500');
+        flashbangToggle.querySelector('svg').classList.add('text-gray-600', 'group-hover:text-yellow-400');
+        flashbangToggle.querySelector('svg').classList.remove('text-yellow-400');
     }
 });
 
