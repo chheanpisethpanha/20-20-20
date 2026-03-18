@@ -10,11 +10,18 @@ const soundMenu = document.getElementById('soundMenu');
 // Timer variables
 let interval;
 let isRunning = false;
-let isRestPeriod = false; // Track if we're in rest period
-const defaultDuration = 1200; // Default timer duration in seconds (20 minutes)
-const restDuration = 20; // Rest timer duration in seconds (20 seconds)
-let alarmSound = new Audio('i-have-eyes.mp3'); // Alarm sound
-alarmSound.volume = 0.5; // 50% volume reduction
+let isRestPeriod = false;
+const defaultDuration = 1200;
+const restDuration = 20;
+
+function makeSound(src) {
+    const a = new Audio(src);
+    a.volume = 0.3;
+    return a;
+}
+
+let startSound = makeSound('throwing-flashbang-sound-effect-cs-go.mp3');
+let endSound = makeSound('sector-clear.mp3');
 
 // Sound picker
 soundButton.addEventListener('click', (e) => {
@@ -26,9 +33,19 @@ document.addEventListener('click', () => soundMenu.classList.add('hidden'));
 
 document.querySelectorAll('.sound-option').forEach(btn => {
     btn.addEventListener('click', () => {
-        alarmSound = new Audio(btn.dataset.sound);
-        alarmSound.volume = 0.5;
-        alarmSound.play();
+        const section = btn.dataset.section;
+        const src = btn.dataset.sound;
+        const preview = makeSound(src);
+        preview.play();
+
+        if (section === 'start') {
+            startSound = makeSound(src);
+            document.querySelectorAll('.sound-option[data-section="start"]').forEach(b => b.classList.remove('text-accent'));
+        } else {
+            endSound = makeSound(src);
+            document.querySelectorAll('.sound-option[data-section="end"]').forEach(b => b.classList.remove('text-accent'));
+        }
+        btn.classList.add('text-accent');
         soundMenu.classList.add('hidden');
     });
 });
@@ -93,22 +110,23 @@ function startTimer(duration, isRest = false) {
 
         if (remaining <= 0) {
             clearInterval(interval);
-            alarmSound.play(); // Play alarm sound
 
             if (isRestPeriod) {
-                // Rest period ended, start work timer
+                // Rest period ended — play end sound, go back to work
+                endSound.play();
                 sendNotification(
                     '✅ Rest Complete!',
                     'Time to get back to work! Starting 20-minute work timer.'
                 );
-                startTimer(defaultDuration, false); // Start the 20-minute work timer
+                startTimer(defaultDuration, false);
             } else {
-                // Work period ended, start rest timer
+                // Work period ended — play start sound, begin rest
+                startSound.play();
                 sendNotification(
                     '👀 Time for a break!',
                     'Look at something 20 feet away for 20 seconds to rest your eyes.'
                 );
-                startTimer(restDuration, true); // Start the 20-second rest timer
+                startTimer(restDuration, true);
             }
         }
     }, 1000);
