@@ -4,6 +4,8 @@ const startButton = document.getElementById('startButton');
 const resetButton = document.getElementById('resetButton');
 const toggleDarkMode = document.getElementById('toggleDarkMode');
 const notificationText = document.getElementById('notificationText');
+const soundButton = document.getElementById('soundButton');
+const soundMenu = document.getElementById('soundMenu');
 
 // Timer variables
 let interval;
@@ -11,8 +13,25 @@ let isRunning = false;
 let isRestPeriod = false; // Track if we're in rest period
 const defaultDuration = 1200; // Default timer duration in seconds (20 minutes)
 const restDuration = 20; // Rest timer duration in seconds (20 seconds)
-const alarmSound = new Audio('i-have-eyes.mp3'); // Alarm sound
+let alarmSound = new Audio('i-have-eyes.mp3'); // Alarm sound
 alarmSound.volume = 0.5; // 50% volume reduction
+
+// Sound picker
+soundButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    soundMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', () => soundMenu.classList.add('hidden'));
+
+document.querySelectorAll('.sound-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+        alarmSound = new Audio(btn.dataset.sound);
+        alarmSound.volume = 0.5;
+        alarmSound.play();
+        soundMenu.classList.add('hidden');
+    });
+});
 
 // Update notification status display
 function updateNotificationStatus() {

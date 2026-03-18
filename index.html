@@ -60,11 +60,25 @@
     <canvas id="starfield"></canvas>
     <div id="dot-grid"></div>
 
-    <button id="toggleDarkMode" class="fixed top-6 right-6 z-10 p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
-        <svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-        </svg>
-    </button>
+    <div class="fixed top-6 right-6 z-10 flex gap-2">
+        <div class="relative">
+            <button id="soundButton" class="p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
+                <svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6v12m0 0l-3-3m3 3l3-3M9 9H5a1 1 0 00-1 1v4a1 1 0 001 1h4l3 3V6L9 9z"></path>
+                </svg>
+            </button>
+            <div id="soundMenu" class="hidden absolute right-0 mt-2 w-40 bg-off-black-light border border-off-black-lighter rounded-xl shadow-xl overflow-hidden">
+                <button class="sound-option w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-off-black-lighter transition-colors" data-sound="i-have-eyes.mp3">I Have Eyes</button>
+                <button class="sound-option w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-off-black-lighter transition-colors" data-sound="error.mp3">Error</button>
+                <button class="sound-option w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-off-black-lighter transition-colors" data-sound="throwing-flashbang-sound-effect-cs-go.mp3">Flashbang</button>
+            </div>
+        </div>
+        <button id="toggleDarkMode" class="p-3 rounded-full bg-off-black-lighter border border-off-black-lighter hover:border-accent transition-all duration-300 group">
+            <svg class="w-6 h-6 text-gray-400 group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </div>
 
     <div class="relative z-10 p-8 md:p-12 bg-off-black-light border border-off-black-lighter rounded-3xl text-center max-w-md w-full mx-4 backdrop-blur-sm">
         <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent-light/5 rounded-3xl"></div>
