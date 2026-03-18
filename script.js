@@ -212,7 +212,7 @@ const flashbangToggle = document.getElementById('flashbangToggle');
 
 flashbangToggle.addEventListener('click', () => {
     if (!flashbangMode) {
-        const ok = confirm('⚡ Flashbang mode: light mode will auto-enable when your break starts.\n\nYour eyes will be punished. Enable?');
+        const ok = confirm('⚡ Flashbang mode: light mode will auto-enable when your break starts.\n\n⚠️ WARNING: The sudden screen flash may trigger photosensitive epilepsy. Do not enable if you or anyone nearby is sensitive to sudden bright light changes.\n\nEnable anyway?');
         if (!ok) return;
         flashbangMode = true;
         flashbangToggle.classList.remove('border-off-black-lighter', 'hover:border-yellow-500');
